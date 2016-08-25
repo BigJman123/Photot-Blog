@@ -159,6 +159,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Darryldecode\Cart\CartServiceProvider::class,
 
     ],
 
@@ -207,6 +208,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'Cart' => 'Darryldecode\Cart\Facades\CartFacade',
 
     ],
 

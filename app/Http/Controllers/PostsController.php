@@ -66,6 +66,7 @@ class PostsController extends Controller
     public function show($id)
     {
         $post = Post::findOrFail($id);
+
         return view('post.show', ['post' => $post]);
     }
 
@@ -78,6 +79,9 @@ class PostsController extends Controller
     public function edit($id)
     {
         $post = Post::findOrFail($id);
+
+        abort_unless($this->userMadePost($post), 403, "You can't modify this post");
+
         return view('post.edit', ['post' => $post]);
     }
 
@@ -96,6 +100,9 @@ class PostsController extends Controller
             ]);
 
         $post = Post::findOrFail($id);
+
+        abort_unless($this->userMadePost($post), 403, "Get outta here!");
+
         $post->update($request->all());
 
         return redirect()->route('posts.index');
@@ -109,6 +116,12 @@ class PostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->delete();
+        return redirect()->route('posts.index');
+    }
+
+    private function userMadePost($post) {
+        return Auth::id() == $post->user_id;
     }
 }
