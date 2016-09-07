@@ -21,7 +21,7 @@ class CartController extends Controller
     {
         $items = Cart::getContent()->toArray();
 
-        return view('products.index')->with(['items' => $items]);
+        return view('cart.index')->with(['items' => $items]);
     }
 
     /**
@@ -47,6 +47,7 @@ class CartController extends Controller
         if ($product->quantity == 0){
             return response()->json([
                 'message' => "This product is not avaliable",
+                'qty' => 0,
                 ], 403);
         }
 
@@ -60,8 +61,8 @@ class CartController extends Controller
         $product->decrement('quantity');
 
         return response()->json([
-                'message' => "quantity updated",
-                'qty' => ,
+                'message' => $product->title . " added to cart",
+                'qty'     => $product->quantity,
             ], 201);
     }
 
@@ -73,7 +74,9 @@ class CartController extends Controller
      */
     public function show($id)
     {
-        //
+        $subtotal = Cart::getSubTotal();
+
+
     }
 
     /**
@@ -102,11 +105,11 @@ class CartController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy()
     {
-        //
+        Cart::clear();
+        return redirect()->route('cart.index');
     }
 }

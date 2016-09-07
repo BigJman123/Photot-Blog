@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use Auth;
+
 use App\Product;
 
 use Cart;
@@ -31,7 +33,7 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        //
+        return view('products.create');
     }
 
     /**
@@ -42,7 +44,24 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+                'title' => 'required',
+                'description' => 'required',
+                'price' => 'required|numeric',
+                'quantity' => 'required|integer'
+            ]);
+
+        $product = new Product([
+                'user_id'     => Auth::id(),
+                'title'       => $request->get('title'),
+                'price'       => $request->get('price'),
+                'quantity'       => $request->get('quantity'),
+                'description' => $request->get('description'),
+            ]);
+
+        $product->save();
+
+        return redirect()->route('products.index');
     }
 
     /**
@@ -66,7 +85,11 @@ class ProductsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        abort_unless($this->userMadeProduct($product), 403, "You can't modify this product");
+
+        return view('products.edit', ['product' => $product]);
     }
 
     /**
@@ -78,7 +101,20 @@ class ProductsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+                'title' => 'required',
+                'description' => 'required',
+                'price' => 'required|numeric',
+                'quantity' => 'required|integer'
+            ]);
+
+        $product = Product::findOrFail($id);
+
+        abort_unless($this->userMadeProduct($product), 403, "Get outta here!");
+
+        $product->update($request->all());
+
+        return redirect()->route('products.index');
     }
 
     /**
@@ -89,6 +125,12 @@ class ProductsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->delete();
+        return redirect()->route('products.index');
+    }
+
+    private function userMadeProduct($product) {
+        return Auth::id() == $product->user_id;
     }
 }
