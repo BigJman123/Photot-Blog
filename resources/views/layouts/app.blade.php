@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="publishable-key" content="{{ Config::get('stripe.publishable_key') }}">
 
     <title>Photot</title>
 
@@ -79,6 +80,12 @@
             </div>
         </div>
     </nav>
+
+    @if (Session::has('flash_message'))
+        <div class="flash_message">
+            {{ Session::get('flash_message')}}
+        </div>
+    @endif
 
     <div class="container">
         @yield('content')

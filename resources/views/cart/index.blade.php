@@ -35,7 +35,7 @@
 				<button type="submit" class="btn btn-primary">Clear Cart</button>
 			{{ Form::close() }}
 
-			<button type="submit" class="btn btn-primary">Checkout</button>
+			<a href="/buy"><button type="submit" class="btn btn-primary">Checkout</button></a>
 		</div>
 
 	@else
