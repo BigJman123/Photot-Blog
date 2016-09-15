@@ -4,19 +4,19 @@
 
 <h1>Buy For $10</h1>
 
-{{ Form::open(['id' => 'billing-form']) }}
+{{ Form::open(['id' => 'billing-form', 'route' => ['order.store']]) }}
 
 	<div class="form-row">
 		<label>
 			<span>Address:</span>
-			<input type="text" required>
+			<input type="text" name="address" required>
 		</label>
 	</div>
 
 	<div class="form-row">
 		<label>
 			<span>State:</span>
-			<select>
+			<select name="state">
 				<option value="AL">Alabama</option>
 				<option value="AK">Alaska</option>
 				<option value="AZ">Arizona</option>
@@ -75,7 +75,7 @@
 	<div class="form-row">
 		<label>
 			<span>Zip Code:</span>
-			<input type="" required>
+			<input type="" name="zip" required>
 		</label>
 	</div>
 
@@ -104,7 +104,7 @@
 	<div class="form-row">
 		<label>
 			<span>Email Address:</span>
-			<input type="email" id="email" name="name" required>
+			<input type="email" id="email" name="email" required>
 		</label>
 	</div>
 
