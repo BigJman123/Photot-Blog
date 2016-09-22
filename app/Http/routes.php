@@ -13,4 +13,4 @@ Route::resource('cart', 'CartController', ['except' => ['store', 'destroy']]);
 Route::get('/posts/{id}/edit', 'PostsController@edit');
 
 Route::get('checkout', ['uses' => 'OrdersController@create']);
-Route::resource('order', 'OrdersController');
+Route::resource('order', 'OrdersController', ['except' => ['create']]);

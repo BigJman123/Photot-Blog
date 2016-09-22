@@ -2,14 +2,30 @@
 
 @section('content')
 
-<h1>Buy For $10</h1>
+<h1>Shipping Information</h1>
 
 {{ Form::open(['id' => 'billing-form', 'route' => ['order.store']]) }}
+
+	<h3>Personal Information</h3>
+
+	<div class="form-row">
+		<label>
+			<span>Name:</span>
+			<input type="text" name="name" required>
+		</label>
+	</div>
 
 	<div class="form-row">
 		<label>
 			<span>Address:</span>
 			<input type="text" name="address" required>
+		</label>
+	</div>
+
+	<div class="form-row">
+		<label>
+			<span>City:</span>
+			<input type="text" name="city" required>
 		</label>
 	</div>
 
@@ -81,6 +97,17 @@
 
 	<div class="form-row">
 		<label>
+			<span>Email Address:</span>
+			<input type="email" id="email" name="email" required>
+		</label>
+	</div>
+
+	<hr>
+
+	<h3>Credit Card Details</h3>
+
+	<div class="form-row">
+		<label>
 			<span>Card Number:</span>
 			<input type="text" data-stripe="number" value="4242424242424242" required>
 		</label>
@@ -101,12 +128,6 @@
 		</label>
 	</div>
 
-	<div class="form-row">
-		<label>
-			<span>Email Address:</span>
-			<input type="email" id="email" name="email" required>
-		</label>
-	</div>
 
 	<div class="form-row">
 		{{ Form::submit('Buy Now') }}
@@ -115,8 +136,6 @@
 	<div class="payment-errors"></div>
 
 {{ Form::close() }}
-
-
 
 @stop
 

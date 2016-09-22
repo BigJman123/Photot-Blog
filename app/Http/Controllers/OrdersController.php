@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
+use App\Order;
 use App\User;
 use Illuminate\Http\Request;
 use Nacho\Billing\BillingInterface;
+use Cart;
+use Auth;
 
 class OrdersController extends Controller
 {
@@ -26,7 +29,7 @@ class OrdersController extends Controller
      */
     public function create()
     {
-        return view('stripe.buy');
+        return view('order.create');
     }
 
     /**
@@ -42,8 +45,17 @@ class OrdersController extends Controller
                 'stripe-token' => 'required'
             ]);
 
-        // Create an order record
-        // Order::create(['price' => Cart::getSubttotal(), 'items' => Cart::getItems()])
+        $items = collect(Cart::getContent()->toArray())->map(function ($product) {
+                    extract($product);
+                    return compact('id', 'name', 'price', 'quantity');
+                })->toArray();
+
+        $order = Order::create($request->only(['name', 'address', 'city', 'state', 'zip']));
+        $order->price = Cart::getSubTotal();
+        $order->items = $items;
+        $order->user_id = auth()->id();
+        $order->save();
+        // $order = Order::create(['price' => Cart::getSubTotal(), 'items' => $items]);
 
         try
         {
@@ -52,7 +64,7 @@ class OrdersController extends Controller
                 'token' => $request->get('stripe-token')
             ]);
 
-            $user = User::first();
+            $user = User::firstOrFail();
             $user->billing_id = $customerId;
             $user->save();
         }
@@ -62,10 +74,7 @@ class OrdersController extends Controller
             return Redirect::refresh()->withFlashMessage($e->getMessage());
         }
 
-        // return to order.show page with the id of the new order you created
-        // return redirect()->route('order.show', $order->id);
-
-        return "order was successful";
+        return redirect()->route('order.show', $order->id);
     }
 
     /**
@@ -76,7 +85,13 @@ class OrdersController extends Controller
      */
     public function show($id)
     {
-        
+
+        $order = Order::all();
+        // look up the order
+        // return the view of order.show
+        // send through the order you just looked up
+
+        return view('order.show')->with(['order' => $order]);
     }
 
     /**
