@@ -86,10 +86,7 @@ class OrdersController extends Controller
     public function show($id)
     {
 
-        $order = Order::all();
-        // look up the order
-        // return the view of order.show
-        // send through the order you just looked up
+        $order = Order::findOrFail($id);
 
         return view('order.show')->with(['order' => $order]);
     }
